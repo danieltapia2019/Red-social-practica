@@ -8,6 +8,10 @@ const initialState = {
     error: null
 }
 
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async() =>{
+    const response = await client.get('/fakeApi/posts')
+    return response.posts;
+})
 const postsSlice = createSlice({
     name: 'posts',
     initialState,
@@ -50,13 +54,25 @@ const postsSlice = createSlice({
                 existingPost.reactions[reaction]++
             }
         }
+    },
+    extraReducers: {
+        [fetchPosts.pending]: (state,action) =>{
+            state.status = "loading";
+        },
+        [fetchPosts.fulfilled]: (state,action) =>{
+            state.status = "succeeded";
+            state.posts = state.posts.concat(action.payload);
+        },
+        [fetchPosts.rejected]: (state,action) =>{
+            state.status.failed = "failed";
+            state.error = action.error.message;
+        }
+
     }
+
 })
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async() =>{
-    const response = await client.get('/fakeApi/posts')
-    return response.posts;
-})
+
 
 export const{postAdded,postUpdated,reactionAdded} = postsSlice.actions;
 
