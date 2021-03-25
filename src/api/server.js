@@ -67,7 +67,7 @@ const notificationTemplates = [
 new Server({
   routes() {
     this.namespace = 'fakeApi'
-    this.timing = 4000
+    //this.timing = 4000
 
     this.resource('users')
     this.resource('posts')
